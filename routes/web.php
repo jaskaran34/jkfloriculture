@@ -23,7 +23,11 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 Route::get('/eticket', [App\Http\Controllers\EticketController::class, 'index'])->name('eticket');
 
-Route::post('/division/view', [App\Http\Controllers\DivisionController::class, 'view_records'])->name('division_view');
+Route::get('/division/view', [App\Http\Controllers\DivisionController::class, 'view_records'])->name('division_view');
+Route::get('/garden/view', [App\Http\Controllers\GardenController::class, 'garden_view'])->name('garden_view');
+
+
+Route::post('/gardens', [App\Http\Controllers\GardenController::class, 'index'])->name('gardens');
 Route::post('/division', [App\Http\Controllers\DivisionController::class, 'index'])->name('division');
 Route::delete('/division/delete', [App\Http\Controllers\DivisionController::class, 'delete'])->name('division_delete');
 

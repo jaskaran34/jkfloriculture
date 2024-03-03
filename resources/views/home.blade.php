@@ -46,18 +46,17 @@
     <div class="row justify-content-center" style="padding: 2%;">
         <div class="col-3" style="height: 100px;">
 
-                <button
-                        onclick="division_master('{{route('division_view')}}','{{ csrf_token() }}')"
+                <a href="{{route('division_view')}}"
                         class="btn btn-warning">
                     Division Master
-                </button>
+                </a>
         </div>
         <div class="col-3" style="height: 100px;">
-            <form method="get" action="{{route('division_view')}}">
-                @csrf
-                <input type="submit" value="Garden Master" class="btn btn-info">
 
-            </form>
+            <a href="{{route('garden_view')}}"
+               class="btn btn-primary">
+                Garden Master
+            </a>
         </div>
 
 

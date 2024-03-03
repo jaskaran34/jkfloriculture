@@ -16,10 +16,8 @@ class DivisionController extends Controller
 
         $division_delete = Division::findOrFail($request['id']);
         $division_delete->delete();
-
-        $divisions = Division::all();
-
-        return view("division_master",compact('divisions'));
+        session()->flash('Message_deleted', 'Record Deleted');
+        return redirect()->route('division_view');
 
     }
     function generateRandomString($length = 6) {
@@ -40,10 +38,10 @@ class DivisionController extends Controller
 
     }
 
-    public function index(){
+    public function index(Request $request){
 
 
-        $val=strtoupper('Kashmir');
+        $val=trim(strtoupper($request['name']));
         $check = Division::whereRaw('UPPER(name) = ?', [$val])->get();
         $count = $check->count();
         /*
@@ -59,15 +57,13 @@ class DivisionController extends Controller
 
             Division::create([
                 'division_code' => $randomString,
-                'name' => 'Kashmir',
+                'name' => $val,
             ]);
             session()->flash('Message', 'Record Added');
         }
         else{
             session()->flash('Message', 'Record Already Exist');
         }
-        $divisions = Division::all();
-
-        return view("division_master",compact('divisions'));
+        return redirect()->route('division_view');
     }
 }
