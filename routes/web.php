@@ -27,7 +27,15 @@ Route::get('/division/view', [App\Http\Controllers\DivisionController::class, 'v
 Route::get('/garden/view', [App\Http\Controllers\GardenController::class, 'garden_view'])->name('garden_view');
 
 
+
+Route::post('/garden/update', [App\Http\Controllers\GardenController::class, 'update_request'])->name('garden_update');
+
+
 Route::post('/gardens', [App\Http\Controllers\GardenController::class, 'index'])->name('gardens');
 Route::post('/division', [App\Http\Controllers\DivisionController::class, 'index'])->name('division');
 Route::delete('/division/delete', [App\Http\Controllers\DivisionController::class, 'delete'])->name('division_delete');
+
+Route::delete('/garden/delete', [App\Http\Controllers\GardenController::class, 'delete'])->name('garden_delete');
+Route::patch('/garden/edit/{id}', [App\Http\Controllers\GardenController::class, 'garden_update'])->name('garden_update_form');
+
 

@@ -11,4 +11,9 @@ class garden extends Model
 
     protected $table = 'gardens';
     protected $guarded = [];
+
+    public function division()
+    {
+        return $this->belongsTo(Division::class, 'division_code', 'division_code');
+    }
 }
