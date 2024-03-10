@@ -11,6 +11,8 @@ use Illuminate\Http\Request;
 use App\Models\garden;
 use App\Models\Division;
 
+use Exception;
+
 class GardenController extends Controller
 {
     function generateRandomString($length = 6) {
@@ -42,9 +44,10 @@ class GardenController extends Controller
 
         $validatedata=$request->validate([
             'name' => 'required|string|max:255|unique:gardens',
-            'price_adult' => 'required|numeric|min:0',
-            'price_child' => 'required|numeric|min:0',
-            'file' => 'required|file|max:500', // max:10240 means maximum file size is 10MB
+            'price_adult' => 'required|numeric|min:1|max:50',
+            'price_child' => 'required|numeric|min:1',
+            'is_active' => 'required|in:true,false',
+            'file' => 'required|file|mimes:jpeg,jpg,png,PNG|max:500',  // max:10240 means maximum file size is 10MB
         ]);
 
         $file = $request->file('file');
@@ -58,6 +61,7 @@ class GardenController extends Controller
             'price_adult' => $validatedata['price_adult'],
             'price_child' => $validatedata['price_child'],
             'image_path' => $fileName,
+            'is_active' => $validatedata['is_active']
         ]);
         session()->flash('Message', 'Record Added');
 
@@ -119,32 +123,72 @@ class GardenController extends Controller
         return "File uploaded successfully. Path: $fileName";
         */
     }
-    function update_request(Request $request)
+    function update_request(Request $request,$id)
     {
-        $garden = garden::findOrFail($request['id']);
+
+        $garden = garden::findOrFail($id);
 
         $divisions = Division::all();
         return view("garden_edit",compact('garden','divisions'));
     }
     function garden_update(Request $request,$id)
     {
+/*
+        try {
+            if (!is_numeric($request['price_adult'])) {
+                throw new Exception("Price Adult must be numeric.");
+            }
+
+            $priceAdult = (int)$request['price_adult'];
+            if ($priceAdult <= 0) {
+
+                throw new Exception("Price Adult must be greater than zero.");
+            }
+
+            // Validation passed
+            // Proceed with further processing
+        } catch (Exception $exception) {
+            return redirect()->back()->with('error', $exception->getMessage());
+        }
+        */
+
+
         $validatedData = $request->validate([
             'name' => 'required|string|max:255|unique:gardens,name,' . $id,
-            // Define other validation rules as needed
+            'price_adult' => 'required|numeric|min:1|max:50',
+            'price_child' => 'required|numeric|min:1',
+            'is_active' => 'required|in:true,false',
+            'file' => 'file|mimes:jpeg,jpg,png,PNG|max:500',  // max:10240 means maximum file size is 10MB
+
         ]);
 
-        $file = $request->file('file');
-        $fileName = $file->getClientOriginalName();
-        $file->move(public_path('uploads'), $fileName);
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $fileName = $file->getClientOriginalName();
+            $file->move(public_path('uploads'), $fileName);
 
-        garden::where('id', $request['id'])
-            ->update([
-                'name' =>  $request->input('name'),
-                'image_path' => $fileName,
-                'division_code' => $request->input('division_code'),
-                'price_adult' => $request->input('price_adult'),
-                'price_child' => $request->input('price_child')
-            ]);
+            garden::where('id', $request['id'])
+                ->update([
+                    'name' =>  $request->input('name'),
+                    'image_path' => $fileName,
+                    'division_code' => $request->input('division_code'),
+                    'price_adult' => $request->input('price_adult'),
+                    'is_active' => $request->input('is_active'),
+                    'price_child' => $request->input('price_child')
+                ]);
+        } else {
+
+            garden::where('id', $request['id'])
+                ->update([
+                    'name' =>  $request->input('name'),
+                    'division_code' => $request->input('division_code'),
+                    'price_adult' => $request->input('price_adult'),
+                    'is_active' => $request->input('is_active'),
+                    'price_child' => $request->input('price_child')
+                ]);
+        }
+
+
 
         $garden = garden::findOrFail($request['id']);
 

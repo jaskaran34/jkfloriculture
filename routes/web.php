@@ -28,7 +28,10 @@ Route::get('/garden/view', [App\Http\Controllers\GardenController::class, 'garde
 
 
 
-Route::post('/garden/update', [App\Http\Controllers\GardenController::class, 'update_request'])->name('garden_update');
+//Route::post('/garden/update', [App\Http\Controllers\GardenController::class, 'update_request'])->name('garden_update');
+
+Route::get('/garden/update/{id}', [App\Http\Controllers\GardenController::class, 'update_request'])->name('garden_update');
+
 
 
 Route::post('/gardens', [App\Http\Controllers\GardenController::class, 'index'])->name('gardens');

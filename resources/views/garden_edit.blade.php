@@ -96,6 +96,17 @@
                         <div class="alert alert-danger">{{ $message }}</div>
                         @enderror
                         <div class="form-control">
+                            <label>Status</label>
+<!-- <?php if(!$garden->is_active){echo 'selected';} else{echo '';} ?> -->
+                            <select  name="is_active" >
+                                <option value="true" {{ $garden->is_active  ? 'selected' : '' }}>Open</option>
+                                <option value="false" {{ $garden->is_active  ? '' : 'selected' }}>Not Open</option>
+                            </select>
+                        </div>
+                        <div class="form-control">
+                        <img src="{{asset('uploads/'.$garden->image_path)}}"  style="border: 1px solid #ddd; border-radius: 4px; padding: 5px;   width: 150px; ">
+                        </div>
+                        <div class="form-control">
                             <label>Park photograph</label>
                             <input type="file" name="file">
                         </div>
@@ -103,7 +114,8 @@
                         <div class="alert alert-danger">{{ $message }}</div>
                         @enderror
                         <div class="form-control">
-                            <input style="width: 70px;" type="submit" value="Add" class="btn btn-primary">
+                            <input style="width: 70px;" type="submit" value="Update" class="btn btn-primary">
+                            <input style="width: 70px;" type="button" onclick="window.location='{{ route('garden_view') }}'" value="Back" class="btn btn-success">
                         </div>
 
                     </form>

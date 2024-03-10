@@ -28,12 +28,12 @@
                         <thead class="thead-dark">
                         <tr>
                             <th scope="col">S.no</th>
-                            <th scope="col">Garden Code</th>
                             <th scope="col">Name</th>
                             <th scope="col">Division Name</th>
                             <th scope="col">Price Adult</th>
                             <th scope="col">Price Child</th>
                             <th scope="col">Created At</th>
+                            <th scope="col">Status</th>
                             <th scope="col"></th>
                             <th scope="col"></th>
                         </tr>
@@ -46,18 +46,28 @@
 
                             <tr>
                                 <td>{{$count}}</td>
-                                <td>{{$garden->garden_code}}</td>
                                 <td>{{$garden->name}}</td>
                                 <td>{{$garden->division->name}}</td>
                                 <td>{{$garden->price_adult}}</td>
                                 <td>{{$garden->price_child}}</td>
-                                <td>{{$garden->created_at}}</td>
-                                <td><form method="POST" action="{{route('garden_update')}}">
+                                <td>{{$garden->created_at->diffForHumans()}}</td>
+                                    <?php
+                                        if($garden->is_active){
+                                          ?>
+                                <td  style="color:green">Open</td>
+                                    <?php
+                                    } else
+                                        {
+                                        ?>
+                                <td style="color:red">Not Open</td>
+                                        <?php
+                                    } ?>
+
+                                <td><form method="get" action="{{route('garden_update', ['id' => $garden->id])}}">
                                         @csrf
-                                        <input type="hidden" value="{{$garden->id}}" name="id" >
                                         <input type="submit" value="Edit" class="btn btn-info">
                                     </form> </td>
-                                <td><form method="POST" action="{{route('garden_delete')}}">
+                                <td><form method="POST" action="{{route('garden_delete')}}" onsubmit="check_delete();">
                                         @csrf
                                         @method('DELETE')
                                         <input type="hidden" value="{{$garden->id}}" name="id" >
@@ -80,6 +90,16 @@
                     <label>Garden Entry</label>
                 </div>
                 <script type="text/javascript">
+                    function check_delete(){
+                       let input=prompt('Are you Sure ? If yes enter delete')
+                        if(input=='delete'){
+
+                        }
+                        else{
+                            event.preventDefault();
+                        }
+
+                    }
                     function isPositiveNumber(value) {
                         // Check if the value is a number and greater than zero
                         return !isNaN(value) && parseFloat(value) > 0;
@@ -128,7 +148,7 @@
                         @endif
                         <div class="form-control">
                             <label>Garden Name</label>
-                            <input type="text" name="name" placeholder="Enter Garden Name" value="PARK">
+                            <input type="text" name="name" placeholder="Enter Garden Name" >
                         </div>
                         @error('name')
                         <div class="alert alert-danger">{{ $message }}</div>
@@ -142,7 +162,14 @@
                         @enderror
                         <div class="form-control">
                             <label>Price For Child</label>
-                            <input type="text" name="price_child" id="price_child" value="10" placeholder="Price For Childs">
+                            <input type="text" name="price_child" id="price_child"  placeholder="Price For Childs">
+                        </div>
+                        <div class="form-control">
+                            <label>Status</label>
+                            <select  name="is_active" >
+                           <option value="true" Selected>Open</option>
+                                <option value="false">Not Open</option>
+                            </select>
                         </div>
                         @error('price_child')
                         <div class="alert alert-danger">{{ $message }}</div>
